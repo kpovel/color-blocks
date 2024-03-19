@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="script.js" defer></script>
+    <title>Color blocks</title>
+  </head>
+  <body>
+    <div style="display: flex; flex-direction: column;">
+      {% for y in blocks %}
+        <div style="display: flex;">
+          {% for x in y %}
+            <div id="{{ x.position }}" style="background-color: {{ x.color }}; width: 15px; height: 15px;">
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+
+  </body>
+</html>
