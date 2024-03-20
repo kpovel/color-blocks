@@ -7,16 +7,17 @@
     <title>Color blocks</title>
   </head>
   <body>
-    <div style="display: flex; flex-direction: column;">
+    <div style="display: flex; flex-direction: column">
       {% for y in blocks %}
-        <div style="display: flex;">
-          {% for x in y %}
-            <div id="{{ x.position }}" style="background-color: {{ x.color }}; width: 15px; height: 15px;">
-            </div>
-          {% endfor %}
-        </div>
+      <div style="display: flex">
+        {% for block in y %}
+        <div
+          id="{{ block.y }}:{{ block.x }}"
+          style="background-color: {{ block.color }}; width: 15px; height: 15px;"
+        ></div>
+        {% endfor %}
+      </div>
       {% endfor %}
     </div>
-
   </body>
 </html>

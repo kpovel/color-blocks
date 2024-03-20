@@ -1,6 +1,7 @@
 use crate::AppState;
 use askama::Template;
 use axum::{extract::State, response::Html};
+use libsql::Error;
 use std::sync::Arc;
 
 #[derive(Template)]
@@ -10,26 +11,65 @@ struct IndexTemplate {
 }
 
 struct Block {
-    position: String,
+    y: u32,
+    x: u32,
     color: String,
 }
 
 pub async fn index(State(state): State<Arc<AppState>>) -> Html<String> {
-    let mut blocks = vec![];
-
-    for y in 0..50 {
-        let mut y_block = vec![];
-        for x in 0..70 {
-            y_block.push(Block {
-                position: format!("{}:{}", y, x),
-                color: String::from("grey"),
-            });
+    let blocks = color_blocks(Arc::clone(&state)).await;
+    let blocks = match blocks {
+        Ok(b) => b,
+        Err(e) => {
+            println!("{}", e);
+            return Html(String::from("Error during receiving game state"));
         }
+    };
 
-        blocks.push(y_block);
-    }
+    let blocks: Vec<Vec<Block>> = blocks
+        .into_iter()
+        .fold(vec![], |mut acc, curr_block| match acc.last_mut() {
+            Some(last_y) => {
+                if let Some(last_x) = last_y.last() {
+                    if curr_block.x < last_x.x {
+                        acc.push(vec![curr_block]);
+                        return acc;
+                    } else {
+                        last_y.push(curr_block);
+                        return acc;
+                    }
+                }
+                unreachable!();
+            }
+            None => {
+                acc.push(vec![curr_block]);
+                return acc;
+            }
+        });
 
     let template = IndexTemplate { blocks };
 
     Html(template.render().unwrap())
+}
+
+async fn color_blocks(state: Arc<AppState>) -> Result<Vec<Block>, Error> {
+    let query = "\
+select y, x, color \
+from blocks \
+         inner join available_colors ac on blocks.color_id = ac.id;";
+
+    let mut rows = state.db_conn.query(query, ()).await?;
+    let mut blocks = vec![];
+
+    while let Ok(Some(row)) = rows.next().await {
+        let block = Block {
+            y: row.get(0)?,
+            x: row.get(1)?,
+            color: row.get(2)?,
+        };
+
+        blocks.push(block);
+    }
+
+    Ok(blocks)
 }
