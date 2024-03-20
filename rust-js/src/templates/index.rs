@@ -8,6 +8,7 @@ use std::sync::Arc;
 #[template(path = "index.html")]
 struct IndexTemplate {
     blocks: Vec<Vec<Block>>,
+    colors: Vec<String>,
 }
 
 struct Block {
@@ -47,7 +48,15 @@ pub async fn index(State(state): State<Arc<AppState>>) -> Html<String> {
             }
         });
 
-    let template = IndexTemplate { blocks };
+    let colors = match available_colors(Arc::clone(&state)).await {
+        Ok(c) => c,
+        Err(e) => {
+            println!("{}", e);
+            return Html(String::from("Error during receiving available colors"));
+        }
+    };
+
+    let template = IndexTemplate { blocks, colors };
 
     Html(template.render().unwrap())
 }
@@ -72,4 +81,19 @@ from blocks \
     }
 
     Ok(blocks)
+}
+
+async fn available_colors(state: Arc<AppState>) -> Result<Vec<String>, Error> {
+    let query = "\
+select color \
+from available_colors;";
+
+    let mut rows = state.db_conn.query(query, ()).await?;
+    let mut colors = vec![];
+
+    while let Ok(Some(row)) = rows.next().await {
+        colors.push(row.get::<String>(0)?);
+    }
+
+    Ok(colors)
 }
