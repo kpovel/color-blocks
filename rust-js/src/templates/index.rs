@@ -70,7 +70,7 @@ from blocks \
     let mut rows = state.db_conn.query(query, ()).await?;
     let mut blocks = vec![];
 
-    while let Ok(Some(row)) = rows.next().await {
+    while let Ok(Some(row)) = rows.next() {
         let block = Block {
             y: row.get(0)?,
             x: row.get(1)?,
@@ -91,7 +91,7 @@ from available_colors;";
     let mut rows = state.db_conn.query(query, ()).await?;
     let mut colors = vec![];
 
-    while let Ok(Some(row)) = rows.next().await {
+    while let Ok(Some(row)) = rows.next() {
         colors.push(row.get::<String>(0)?);
     }
 

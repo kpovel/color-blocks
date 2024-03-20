@@ -18,17 +18,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f26201604c87b1e01bd3d98f8d5d9a8fcbb815e8cedb41ffccbeb4bf593a35fe"
 
 [[package]]
-name = "aes"
-version = "0.8.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b169f7a6d4742236a0a00c541b845991d0ac43e546831af1249753ab4c3aa3a0"
-dependencies = [
- "cfg-if",
- "cipher",
- "cpufeatures",
-]
-
-[[package]]
 name = "ahash"
 version = "0.8.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -331,15 +320,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "block-padding"
-version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8894febbff9f758034a5b8e12d87918f56dfc64a8e1fe757d65e29041538d93"
-dependencies = [
- "generic-array",
-]
-
-[[package]]
 name = "byteorder"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -352,15 +332,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2bd12c1caf447e69cd4528f47f94d203fd2582878ecb9e9465484c4148a8223"
 dependencies = [
  "serde",
-]
-
-[[package]]
-name = "cbc"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "26b52a9543ae338f279b96b0b9fed9c8093744685043739079ce85cd58f289a6"
-dependencies = [
- "cipher",
 ]
 
 [[package]]
@@ -383,16 +354,6 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-
-[[package]]
-name = "cipher"
-version = "0.4.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "773f3b9af64447d2ce9850330c473515014aa235e6a783b02db81ff39e4a3dad"
-dependencies = [
- "crypto-common",
- "inout",
-]
 
 [[package]]
 name = "clang-sys"
@@ -920,16 +881,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "inout"
-version = "0.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0c10553d664a4d0bcff9f4215d0aac67a639cc68ef660840afe309b807bc9f5"
-dependencies = [
- "block-padding",
- "generic-array",
-]
-
-[[package]]
 name = "itertools"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -980,9 +931,9 @@ checksum = "4ec2a862134d2a7d32d7983ddcdd1c4923530833c9f2ea1a44fc5fa473989058"
 
 [[package]]
 name = "libsql"
-version = "0.3.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "27798e66397bc976ce3d90db2c94c6ab9c67c48e54fc329d9491e641d9982a82"
+checksum = "43adbef635c87aaf72870e0a1a8cb39eefcc2c0b0386c75a9436ba6048548f07"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1005,7 +956,6 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-stream",
- "tokio-util",
  "tonic",
  "tonic-web",
  "tower",
@@ -1017,9 +967,9 @@ dependencies = [
 
 [[package]]
 name = "libsql-ffi"
-version = "0.2.1"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f67a0b0c6585ed06d48bfb2fd702a826065420e602fa34f8eb6e3a44e26520b9"
+checksum = "03e2b55e68a31d8e9d22f5f7f344675122ce2fa86c04e09f21309a4ac1be8c09"
 dependencies = [
  "bindgen",
  "cc",
@@ -1027,9 +977,9 @@ dependencies = [
 
 [[package]]
 name = "libsql-rusqlite"
-version = "0.30.0"
+version = "0.29.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6227e9be9b8cb061692babbcdc7ab268a8df3517d5b377f1d603cfdc9cafe12a"
+checksum = "72ebce60cccb3378c8c25cc6efe7ad836d2cede73936d8e5dfc5bbeba687d441"
 dependencies = [
  "bitflags 2.5.0",
  "fallible-iterator 0.2.0",
@@ -1060,32 +1010,26 @@ dependencies = [
 
 [[package]]
 name = "libsql-sys"
-version = "0.4.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e260ef2a25e4d75bad7a45355a7f777429e59bf0867bbe43322cdc8d9eada774"
+checksum = "ef02e10d5eea47cdc6dec250c9dc0346c2da1e6e4c9c0263aa6996bbe5606260"
 dependencies = [
- "base64",
- "bytes",
  "libsql-ffi",
  "libsql-rusqlite",
  "once_cell",
- "prost",
- "serde",
  "tracing",
  "zerocopy",
 ]
 
 [[package]]
 name = "libsql_replication"
-version = "0.3.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d064663c7ad1d2471c6a54decee33b4d6d2c5bc4daa2c73f7e48584998f653e"
+checksum = "f14a83a2bda792a05a280571d583b7657588e590576e7d2be21d4cd03cb5a756"
 dependencies = [
- "aes",
  "async-stream",
  "async-trait",
  "bytes",
- "cbc",
  "libsql-rusqlite",
  "libsql-sys",
  "parking_lot",

@@ -7,7 +7,7 @@ use axum::{
 };
 use futures::stream::StreamExt;
 use futures::SinkExt;
-use libsql::{Builder, Connection};
+use libsql::{Connection, Database};
 use std::error::Error;
 use std::sync::Arc;
 use tokio::sync::broadcast;
@@ -24,11 +24,7 @@ struct AppState {
 async fn main() -> Result<(), Box<dyn Error>> {
     let env = env::env();
 
-    let db_conn = Builder::new_remote(env.libsql_url, env.libsql_auth_token)
-        .build()
-        .await
-        .map_err(|e| e.to_string())?
-        .connect()?;
+    let db_conn = Database::open_remote(env.libsql_url, env.libsql_auth_token)?.connect()?;
 
     let (tx, _rx) = broadcast::channel(100);
     let app_state = Arc::new(AppState { tx, db_conn });
