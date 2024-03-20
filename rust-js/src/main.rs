@@ -64,6 +64,13 @@ async fn handle_socket(socket: WebSocket, state: Arc<AppState>) {
     let tx = state.tx.clone();
     let mut recv_task = tokio::spawn(async move {
         while let Some(Ok(Message::Text(text))) = receiver.next().await {
+            let sent_message = text.clone();
+            let state = Arc::clone(&state);
+
+            tokio::spawn(async move {
+                update_block_color(state, &sent_message).await;
+            });
+
             let _ = tx.send(text);
         }
     });
@@ -72,4 +79,26 @@ async fn handle_socket(socket: WebSocket, state: Arc<AppState>) {
         _ = (&mut send_task) => recv_task.abort(),
         _ = (&mut recv_task) => send_task.abort()
     };
+}
+
+async fn update_block_color(state: Arc<AppState>, message: &str) {
+    let split_message = message.split(":").collect::<Vec<&str>>();
+
+    let query = "
+update blocks
+set color_id = (select id from available_colors where color = ?1)
+where y = ?2
+  and x = ?3;";
+
+    let _ = state
+        .db_conn
+        .execute(
+            query,
+            (
+                split_message[2],
+                split_message[0].parse::<u32>().unwrap(),
+                split_message[1].parse::<u32>().unwrap(),
+            ),
+        )
+        .await;
 }
